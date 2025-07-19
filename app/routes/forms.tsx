@@ -1,14 +1,13 @@
 // app/routes/register.tsx
+import { redirect, unstable_createMemoryUploadHandler, unstable_parseMultipartFormData, type ActionFunctionArgs } from "@remix-run/node";
+import { Form, useNavigation } from "@remix-run/react";
 import { useState } from "react";
-import { Form, useActionData, useNavigation } from "@remix-run/react";
-import { json, redirect, type ActionFunctionArgs } from "@remix-run/node";
-import { unstable_parseMultipartFormData, unstable_createMemoryUploadHandler } from "@remix-run/node";
 
 // Types
 interface PersonalInfo {
   name: string;
   email: string;
-  password: string;
+  
 }
 
 interface CompanyInfo {
@@ -62,19 +61,19 @@ export async function action({ request }: ActionFunctionArgs) {
   console.log("Données du formulaire reçues:", Object.fromEntries(formData));
   
   // Rediriger vers une page de succès
-  return redirect("/success");
+  return redirect("/dashboard");
 }
 
 export default function RegisterForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
-    personalInfo: { name: "", email: "", password: "" },
+    personalInfo: { name: "", email: ""},
     companyInfo: { name: "", description: "", address: "", contact: "", country: "", website: "", category: "" },
     files: { logo: null, registrationDoc: null, businessCard: null },
     agencies: []
   });
 
-  const actionData = useActionData<typeof action>();
+  // const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
 
@@ -193,8 +192,8 @@ export default function RegisterForm() {
 
   // Validation pour l'étape 1
   const isStep1Valid = () => {
-    const { name, email, password } = formData.personalInfo;
-    return name.trim() !== "" && email.trim() !== "" && password.trim() !== "";
+    const { name, email,  } = formData.personalInfo;
+    return name.trim() !== "" && email.trim() !== "" 
   };
 
   // Validation pour l'étape 2 (website est optionnel)
@@ -211,32 +210,7 @@ export default function RegisterForm() {
   };
 
   const canProceedToNext = () => {
-  // Préparer les données pour la soumission finale
-  const prepareFormDataForSubmission = () => {
-    const submitData = new FormData();
-    
-    // Ajouter les informations personnelles
-    submitData.append('personalInfo', JSON.stringify(formData.personalInfo));
-    
-    // Ajouter les informations de l'entreprise
-    submitData.append('companyInfo', JSON.stringify(formData.companyInfo));
-    
-    // Ajouter les fichiers
-    if (formData.files.logo) {
-      submitData.append('logo', formData.files.logo);
-    }
-    if (formData.files.registrationDoc) {
-      submitData.append('registrationDoc', formData.files.registrationDoc);
-    }
-    if (formData.files.businessCard) {
-      submitData.append('businessCard', formData.files.businessCard);
-    }
-    
-    // Ajouter les agences
-    submitData.append('agencies', JSON.stringify(formData.agencies));
-    
-    return submitData;
-  };
+  // (prepareFormDataForSubmission removed: unused)
     switch(currentStep) {
       case 1:
         return isStep1Valid();
@@ -284,20 +258,6 @@ export default function RegisterForm() {
           />
         </div>
 
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            Mot de passe <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.personalInfo.password}
-            onChange={(e) => updatePersonalInfo('password', e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            required
-          />
-        </div>
       </div>
     </div>
   );
@@ -309,7 +269,7 @@ export default function RegisterForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">
-            Nom de l'entreprise <span className="text-red-500">*</span>
+            Nom de l&apos;entreprise <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -426,7 +386,7 @@ export default function RegisterForm() {
       <div className="space-y-4">
         <div>
           <label htmlFor="logo" className="block text-sm font-medium text-gray-700">
-            📷 Logo de l'entreprise
+            📷 Logo de l&apos;entreprise
           </label>
           <input
             type="file"
@@ -440,7 +400,7 @@ export default function RegisterForm() {
 
         <div>
           <label htmlFor="registrationDoc" className="block text-sm font-medium text-gray-700">
-            📄 Document d'enregistrement
+            📄 Document d&apos;enregistrement
           </label>
           <input
             type="file"
@@ -471,7 +431,7 @@ export default function RegisterForm() {
         <h3 className="font-medium text-gray-900 mb-2">Fichiers sélectionnés :</h3>
         <ul className="space-y-1 text-sm text-gray-600">
           <li>Logo: {formData.files.logo?.name || "Aucun fichier"}</li>
-          <li>Document d'enregistrement: {formData.files.registrationDoc?.name || "Aucun fichier"}</li>
+          <li>Document d&apos;enregistrement: {formData.files.registrationDoc?.name || "Aucun fichier"}</li>
           <li>Carte professionnelle: {formData.files.businessCard?.name || "Aucun fichier"}</li>
         </ul>
       </div>
@@ -493,7 +453,7 @@ export default function RegisterForm() {
 
       {formData.agencies.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
-          Aucune agence ajoutée. Cliquez sur "Ajouter une agence" pour commencer.
+          Aucune agence ajoutée. Cliquez sur &quot;Ajouter une agence&quot; pour commencer.
         </div>
       ) : (
         <div className="space-y-6">
@@ -512,10 +472,11 @@ export default function RegisterForm() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Nom de l'agence
+                  <label htmlFor={`agency-name-${agency.id}`} className="block text-sm font-medium text-gray-700">
+                    Nom de l&apos;agence
                   </label>
                   <input
+                    id={`agency-name-${agency.id}`}
                     type="text"
                     placeholder="Ex: Agence Lomé"
                     value={agency.name}
@@ -525,10 +486,11 @@ export default function RegisterForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label htmlFor={`agency-address-${agency.id}`} className="block text-sm font-medium text-gray-700">
                     Adresse
                   </label>
                   <input
+                    id={`agency-address-${agency.id}`}
                     type="text"
                     placeholder="Ex: Adresse de l'agence"
                     value={agency.address}
@@ -538,10 +500,11 @@ export default function RegisterForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label htmlFor={`agency-contact-${agency.id}`} className="block text-sm font-medium text-gray-700">
                     Contact
                   </label>
                   <input
+                    id={`agency-contact-${agency.id}`}
                     type="text"
                     placeholder="Ex: Contact Agence"
                     value={agency.contact}
@@ -551,10 +514,11 @@ export default function RegisterForm() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Temps d'attente moyen
+                  <label htmlFor={`agency-waittime-${agency.id}`} className="block text-sm font-medium text-gray-700">
+                    Temps d&apos;attente moyen
                   </label>
                   <input
+                    id={`agency-waittime-${agency.id}`}
                     type="text"
                     value={agency.averageWaitTime}
                     onChange={(e) => updateAgency(agency.id, 'averageWaitTime', e.target.value)}
@@ -580,14 +544,18 @@ export default function RegisterForm() {
                   <div key={service.id} className="bg-gray-50 p-3 rounded mb-2">
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <label htmlFor={`service-name-${agency.id}-${service.id}`} className="sr-only">Nom du service</label>
                         <input
+                          id={`service-name-${agency.id}-${service.id}`}
                           type="text"
                           value={service.name}
                           onChange={(e) => updateService(agency.id, service.id, 'name', e.target.value)}
                           placeholder="Nom du service"
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         />
+                        <label htmlFor={`service-desc-${agency.id}-${service.id}`} className="sr-only">Description du service</label>
                         <input
+                          id={`service-desc-${agency.id}-${service.id}`}
                           type="text"
                           value={service.description}
                           onChange={(e) => updateService(agency.id, service.id, 'description', e.target.value)}
