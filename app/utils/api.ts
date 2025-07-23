@@ -1,97 +1,5 @@
-// export const API_URL = "http://localhost:8000"; // à adapter
 
-// export async function registerUser(data: any) {
-//   const res = await fetch(`${API_URL}/users`, {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(data),
-//   });
-//   return res.json();
-// }
-
-
-// export async function loginUser(credentials: any) {
-//   const res = await fetch("http://localhost:8000/login", {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(credentials),
-//   });
-
-//   return await res.json(); // doit contenir { access_token }
-// }
-
-// export async function createEntreprise(data: any, token: string) {
-//   const res = await fetch("http://localhost:8000/entreprises", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//     body: JSON.stringify(data),
-//   });
-
-//   return await res.json();
-// }
-
-// export async function addService(data: any, token: string) {
-//   const res = await fetch("http://localhost:8000/services", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//     body: JSON.stringify(data),
-//   });
-
-//   return await res.json();
-// }
-
-// export async function getEntrepriseDetails(id: string, token: string) {
-//   const res = await fetch(`http://localhost:8000/entreprises/${id}`, {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-
-//   return await res.json();
-// }
-
-
-// export async function getPendingEntreprises(token: string) {
-//   const res = await fetch("http://localhost:8000/entreprises/pending", {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-//   return await res.json();
-// }
-
-// export async function validateEntreprise(id: string, token: string) {
-//   const res = await fetch(`http://localhost:8000/entreprises/${id}/valider`, {
-//     method: "PATCH",
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-//   return await res.json();
-// }
-
-// export async function createTicket(data: any) {
-//   const res = await fetch("http://localhost:8000/tickets", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(data),
-//   });
-
-//   return await res.json(); // ex : { numero: "DEP-001" }
-// }
-
-
-
-
-const BASE_API_URL = "https://queue-app-42do.onrender.com"; // change selon ton lien Render
+export const BASE_API_URL = "https://queue-app-42do.onrender.com"; // change selon ton lien Render
 
 export async function apiFetcher(
   endpoint: string,
@@ -99,23 +7,125 @@ export async function apiFetcher(
 ) {
   const isFormData = options.body instanceof FormData;
 
-  const headers: HeadersInit = isFormData
-    ? (options.headers || {}) // Ne pas définir Content-Type pour FormData
-    : {
-        "Content-Type": "application/json",
-        ...(options.headers || {}),
-      };
-
-  const res = await fetch(`${BASE_API_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
-
-  if (!res.ok) {
-    const errorBody = await res.json().catch(() => null);
-    throw new Error(errorBody?.detail || "Erreur inconnue");
+  // ➕ Token JWT récupéré automatiquement (client seulement)
+  let token: string | null = null;
+  if (typeof window !== "undefined") {
+    token = localStorage.getItem("access_token"); // ou ton nom de clé exact
   }
 
-  return res.json();
+  const headers: HeadersInit = {
+    ...(isFormData ? options.headers || {} : {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    }),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+
+  const fullUrl = `${BASE_API_URL}${endpoint}`;
+
+  console.log("[API FETCHER] ➜", {
+    url: fullUrl,
+    method: options.method || "GET",
+    headers,
+    body: isFormData ? "[FormData]" : options.body,
+  });
+
+  try {
+    const res = await fetch(fullUrl, {
+      ...options,
+      headers,
+    });
+
+    const contentType = res.headers.get("content-type");
+    const responseBody =
+      contentType?.includes("application/json")
+        ? await res.json()
+        : await res.text();
+
+    if (!res.ok) {
+      console.error("[API FETCHER] ❌ ERREUR", res.status, responseBody);
+      throw new Error(
+        responseBody?.detail || "Une erreur inconnue s’est produite"
+      );
+    }
+
+    console.log("[API FETCHER] ✅ Réponse OK", responseBody);
+    return responseBody;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("[API FETCHER] 🚨 Exception attrapée", error.message);
+      throw error;
+    } else {
+      console.error("[API FETCHER] 🚨 Erreur inconnue attrapée", error);
+      throw new Error("Une erreur inconnue est survenue.");
+    }
+  }
 }
 
+
+export async function pingAPI() {
+  return apiFetcher("/api/users");
+}
+
+
+// export async function registerEnterpriseAgent(formData: FormData) {
+//   try {
+//     const response = await apiFetcher("/api/register/enterprise-agent-base64", {
+//       method: "POST",
+//       body: formData,
+//       credentials: "include",
+//     });
+
+//     return response;
+//   } catch (error) {
+//     console.error("Erreur lors de l'inscription de l'agent d'entreprise :", error);
+//     throw error;
+//   }
+// }
+
+// // export async function verifyEmailOtp(email: string, otp: string) {
+// //   return apiFetcher("/api/verify-email-otp", {
+// //     method: "POST",
+// //     body: JSON.stringify({ email, otp }),
+// //   });
+// }
+
+export async function resendEmailOtp(email: string) {
+  return apiFetcher("/api/resend-email-otp", {
+    method: "POST",
+    body: JSON.stringify(email),
+  });
+}
+
+export async function getEnterpriseCategories() {
+  const response = await fetch(`${process.env.API_URL}/api/entreprise/categories`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch enterprise categories");
+  }
+  return response.json();
+}
+
+
+// app/utils/api.ts
+
+
+export async function registerEnterpriseAgentBase64(payload: any) {
+  try {
+    const response = await fetch(`${BASE_API_URL}/api/register/enterprise-agent-base64`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || "Erreur lors de l'inscription.");
+    }
+
+    return await response.json();
+  } catch (err: any) {
+    throw new Error(err.message || "Erreur réseau.");
+  }
+}
