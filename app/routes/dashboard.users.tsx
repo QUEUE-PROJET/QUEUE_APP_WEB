@@ -1,4 +1,3 @@
-import { Layout } from "~/components/Layout";
 import { Link } from "@remix-run/react";
 
 export default function UsersList() {
@@ -9,7 +8,7 @@ export default function UsersList() {
   ];
 
   return (
-    <Layout>
+    
       <div className="space-y-8">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">Gestion des utilisateurs</h1>
@@ -56,6 +55,6 @@ export default function UsersList() {
           </table>
         </div>
       </div>
-    </Layout>
+   
   );
 }

@@ -23,7 +23,7 @@ export default function Users() {
   };
 
   return (
-    <Layout>
+    
       <div className="space-y-8">
         <h1 className="text-3xl font-bold text-gray-900">Paramètres</h1>
         
@@ -112,6 +112,6 @@ export default function Users() {
           </form>
         </div>
       </div>
-    </Layout>
+    
   );
 }

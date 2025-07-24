@@ -69,17 +69,24 @@ export async function pingAPI() {
 
 
 
-// // export async function verifyEmailOtp(email: string, otp: string) {
-// //   return apiFetcher("/api/verify-email-otp", {
-// //     method: "POST",
-// //     body: JSON.stringify({ email, otp }),
-// //   });
-// }
+ export async function verifyEmailOtp(email: string, otp: string) {
+  return apiFetcher("/api/verify-email-otp", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+     body: JSON.stringify({ email, otp }),
+   });
+   
+}
 
 export async function resendEmailOtp(email: string) {
   return apiFetcher("/api/resend-email-otp", {
     method: "POST",
-    body: JSON.stringify(email),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({email}),
   });
 }
 

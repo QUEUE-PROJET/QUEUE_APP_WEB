@@ -1,5 +1,4 @@
-import { Layout } from "~/components/Layout";
-import { Form, Link } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import { useState } from "react";
 
 export default function NewService() {
@@ -28,7 +27,7 @@ export default function NewService() {
   };
 
   return (
-    <Layout>
+    
       <div className="space-y-8">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">Nouveau Service</h1>
@@ -109,6 +108,6 @@ export default function NewService() {
           </form>
         </div>
       </div>
-    </Layout>
+    
   );
 }

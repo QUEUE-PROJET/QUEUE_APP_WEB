@@ -26,6 +26,8 @@ export default function Index() {
     return () => clearInterval(interval);
   }, []);
 
+  
+
   return (
     <main className="min-h-screen bg-white">
       {/* Header/Navigation */}

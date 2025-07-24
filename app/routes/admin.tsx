@@ -1,18 +1,17 @@
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { Layout } from "~/components/LayoutAdmin";
 
 
-import { 
-  Building2, 
-  Users, 
-  Clock, 
-  Ticket, 
-  Eye,
+import {
+  Building2,
   Check,
-  X,
+  Clock,
+  Eye,
+  Pause,
   Play,
-  Pause
+  Ticket,
+  Users,
+  X
 } from "lucide-react";
 
 interface PendingCompany {
