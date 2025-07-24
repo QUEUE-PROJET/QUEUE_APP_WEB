@@ -1,14 +1,26 @@
-import { NavLink } from "@remix-run/react";
+
+import { Form, NavLink } from "@remix-run/react";
+
+
+interface User {
+  name: string;
+  email: string;
+  role: string;
+  initials: string;
+}
 
 interface LayoutProps {
   children: React.ReactNode;
+  user?: User; // Explicitement nullable
+  
 }
 
-export function Layout({ children }: LayoutProps) {
+export function Layout({ children, user }: LayoutProps) {
+   
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="w-64 bg-blue-900 text-white">
+      <div className="w-64 bg-blue-900 text-white flex flex-col">
         <div className="p-4">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-yellow-400 rounded flex items-center justify-center">
@@ -36,7 +48,7 @@ export function Layout({ children }: LayoutProps) {
           </NavLink>
           
           <NavLink
-            to="/ticket"
+            to="/dashboard/ticket"
             className={({ isActive }) =>
               `flex items-center px-6 py-3 text-sm font-medium transition-colors ${
                 isActive
@@ -52,7 +64,7 @@ export function Layout({ children }: LayoutProps) {
           </NavLink>
           
           <NavLink
-            to="/users"
+            to="/dashboard/users"
             className={({ isActive }) =>
               `flex items-center px-6 py-3 text-sm font-medium transition-colors ${
                 isActive
@@ -68,7 +80,7 @@ export function Layout({ children }: LayoutProps) {
           </NavLink>
           
           <NavLink
-            to="/agences"
+            to="/dashboard/agences"
             className={({ isActive }) =>
               `flex items-center px-6 py-3 text-sm font-medium transition-colors ${
                 isActive
@@ -84,7 +96,7 @@ export function Layout({ children }: LayoutProps) {
           </NavLink>
           
           <NavLink
-            to="/services"
+            to="/dashboard/services"
             className={({ isActive }) =>
               `flex items-center px-6 py-3 text-sm font-medium transition-colors ${
                 isActive
@@ -100,7 +112,7 @@ export function Layout({ children }: LayoutProps) {
           </NavLink>
           
           <NavLink
-            to="/settings"
+            to="/dashboard/settings"
             className={({ isActive }) =>
               `flex items-center px-6 py-3 text-sm font-medium transition-colors ${
                 isActive
@@ -115,6 +127,40 @@ export function Layout({ children }: LayoutProps) {
             Paramètres
           </NavLink>
         </nav>
+
+        {/* Bouton de déconnexion en bas de la sidebar */}
+        <div className="mt-auto p-4 border-t border-blue-800"> {/* Bordure supérieure et espacement */}
+        <Form method="post" action="/logout">
+          <button
+            type="submit"
+            className={`
+              w-full flex items-center justify-center space-x-2 
+              px-4 py-3 text-sm font-medium 
+              text-white bg-red-600 hover:bg-red-700 
+              rounded-lg transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
+              active:bg-red-800 active:scale-[0.98]
+            `}
+          >
+            {/* Icône de déconnexion */}
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-5 w-5" 
+              viewBox="0 0 20 20" 
+              fill="currentColor"
+            >
+              <path 
+                fillRule="evenodd" 
+                d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" 
+                clipRule="evenodd" 
+              />
+            </svg>
+            <span>Déconnexion</span>
+          </button>
+        </Form>
+        </div>
+
+        
       </div>
       
       {/* Main content */}
@@ -124,11 +170,11 @@ export function Layout({ children }: LayoutProps) {
           <div className="flex justify-end items-center px-8 py-4">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-semibold text-sm">JD</span>
+                <span className="text-white font-semibold text-sm">{user?.initials || "??"}</span>
               </div>
               <div>
-                <div className="font-semibold text-gray-900">Jean Dupont</div>
-                <div className="text-sm text-gray-500">Administrateur</div>
+                <div className="font-semibold text-gray-900">{user.name}</div>
+                <div className="text-sm text-gray-500">{user.role.toUpperCase()}</div>
               </div>
             </div>
           </div>

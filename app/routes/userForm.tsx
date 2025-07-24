@@ -23,7 +23,7 @@ export default function Users() {
   };
 
   return (
-    <Layout>
+    
       <div className="space-y-8">
         <h1 className="text-3xl font-bold text-gray-900">Paramètres</h1>
         
@@ -106,12 +106,12 @@ export default function Users() {
                 type="submit"
                 className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-6 py-2 rounded-md font-medium"
               >
-                Ajouter l'utilisateur
+                Ajouter l&apos;utilisateur
               </button>
             </div>
           </form>
         </div>
       </div>
-    </Layout>
+    
   );
 }

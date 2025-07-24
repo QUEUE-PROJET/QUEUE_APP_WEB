@@ -1,11 +1,21 @@
 import { NavLink } from "@remix-run/react";
-import { BarChart3, Building2, Users, TrendingUp, Settings } from "lucide-react";
+import { BarChart3, Building2, Settings, TrendingUp, Users } from "lucide-react";
+
+
+
+interface User {
+  name: string;
+  email: string;
+  role: string;
+  initials: string;
+}
 
 interface LayoutProps {
   children: React.ReactNode;
+  user?: User; 
 }
 
-export function Layout({ children }: LayoutProps) {
+export function LayoutAdmin({ children, user }: LayoutProps) {
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -49,7 +59,7 @@ export function Layout({ children }: LayoutProps) {
           </NavLink>
           
           <NavLink
-            to="/users"
+            to="/dashboard/users"
             className={({ isActive }) =>
               `flex items-center px-6 py-3 text-sm font-medium transition-colors ${
                 isActive
@@ -77,7 +87,7 @@ export function Layout({ children }: LayoutProps) {
           </NavLink>
           
           <NavLink
-            to="/settings"
+            to="/dashboard/settings"
             className={({ isActive }) =>
               `flex items-center px-6 py-3 text-sm font-medium transition-colors ${
                 isActive

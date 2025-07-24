@@ -1,8 +1,7 @@
-import { Layout } from "~/components/Layout";
-import { Link, useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
+import { Link, useLoaderData } from "@remix-run/react";
+import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal } from "react";
 
 // Simuler des données d'agences (à remplacer par un appel à votre API)
 const mockAgences = [
@@ -38,7 +37,7 @@ export default function AgencesList() {
   const { agences } = useLoaderData<typeof loader>();
 
   return (
-    <Layout>
+    
       <div className="space-y-8">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">Liste des agences</h1>
@@ -87,6 +86,6 @@ export default function AgencesList() {
           </table>
         </div>
       </div>
-    </Layout>
+    
   );
 }

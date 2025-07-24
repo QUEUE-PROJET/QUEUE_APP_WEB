@@ -1,24 +1,32 @@
 import { Link } from "@remix-run/react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export default function Index() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [currentFeature, setCurrentFeature] = useState(0);
-
-  const features = [
+const features = [
     "Gestion intelligente des files d'attente",
     "Notifications en temps réel", 
     "Analytics et statistiques détaillées",
     "Interface simple et intuitive"
   ];
 
-  useEffect(() => {
+  
+export default function Index() {
+  const [isMounted, setIsMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [currentFeature, setCurrentFeature] = useState(0);
+  
+
+   useEffect(() => {
+    setIsMounted(true);
     setIsVisible(true);
+
     const interval = setInterval(() => {
       setCurrentFeature((prev) => (prev + 1) % features.length);
     }, 3000);
+
     return () => clearInterval(interval);
   }, []);
+
+  
 
   return (
     <main className="min-h-screen bg-white">
@@ -42,7 +50,7 @@ export default function Index() {
                 Se connecter
               </Link>
               <Link 
-                to="/register" 
+                to="/forms" 
                 className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
               >
                 Créer un compte
@@ -64,17 +72,19 @@ export default function Index() {
           </div>
           
           <p className="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
-            Q-App révolutionne la gestion des files d'attente avec une solution moderne, 
+            Q-App révolutionne la gestion des files d&apos;attente avec une solution moderne, 
             efficace et facile à utiliser pour votre entreprise.
           </p>
 
-          {/* Animated feature text */}
-          <div className="h-8 mb-12">
-            <p className="text-lg text-blue-600 font-medium animate-fade-in-up">
-              <span className="inline-block w-6 h-6 bg-yellow-400 rounded-full mr-2"></span>
-              {features[currentFeature]}
-            </p>
-          </div>
+         {/* ✅ Rendu uniquement après montage pour éviter erreurs d'hydratation */}
+          {isMounted && (
+            <div className="h-8 mb-12">
+              <p className="text-lg text-blue-600 font-medium animate-fade-in-up">
+                <span className="inline-block w-6 h-6 bg-yellow-400 rounded-full mr-2"></span>
+                {features[currentFeature]}
+              </p>
+            </div>
+          )}
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
@@ -126,7 +136,7 @@ export default function Index() {
               Pourquoi choisir Q-App ?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Une solution complète pour optimiser la gestion de vos files d'attente
+              Une solution complète pour optimiser la gestion de vos files d&apos;attente
             </p>
           </div>
 
@@ -137,7 +147,7 @@ export default function Index() {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Rapide & Efficace</h3>
               <p className="text-gray-600">
-                Réduisez les temps d'attente et améliorez l'expérience client avec notre système optimisé.
+                Réduisez les temps d&apos;attente et améliorez l&apos;expérience client avec notre système optimisé.
               </p>
             </div>
             
@@ -174,7 +184,7 @@ export default function Index() {
             </div>
             <div className="text-white">
               <div className="text-4xl font-bold mb-2">50K+</div>
-              <div className="text-blue-100">Files d'attente gérées</div>
+              <div className="text-blue-100">Files d&apos;attente gérées</div>
             </div>
             <div className="text-white">
               <div className="text-4xl font-bold mb-2">99.9%</div>
@@ -188,17 +198,17 @@ export default function Index() {
       <section className="bg-gradient-to-br from-yellow-50 to-blue-50 py-16">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Prêt à optimiser vos files d'attente ?
+            Prêt à optimiser vos files d&apos;attente ?
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Rejoignez des milliers d'entreprises qui font confiance à Q-App
+            Rejoignez des milliers d&apos;entreprises qui font confiance à Q-App
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/register"
               className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl inline-block"
             >
-              Commencer maintenant - C'est gratuit
+              Commencer maintenant - C&apos;est gratuit
             </Link>
             <Link
               to="/login"
@@ -223,7 +233,7 @@ export default function Index() {
               <span className="text-2xl font-bold text-white">Q-App</span>
             </div>
             <p className="mb-4 text-blue-100">
-              La solution intelligente pour vos files d'attente
+              La solution intelligente pour vos files d&apos;attente
             </p>
             <p className="text-sm text-blue-200">© 2025 Q-App. Tous droits réservés.</p>
           </div>

@@ -1,9 +1,8 @@
-import { Layout } from "~/components/Layout";
-import { Link } from "@remix-run/react";
-import { useLoaderData } from "@remix-run/react";
-import { json } from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
+
 import type { LoaderFunction } from "@remix-run/node";
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
+import { json } from "@remix-run/node";
+import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal } from "react";
 
 // Mock data - à remplacer par un appel API réel
 const mockServices = [
@@ -31,7 +30,7 @@ export default function ServicesList() {
   const { services } = useLoaderData<typeof loader>();
 
   return (
-    <Layout>
+    
       <div className="space-y-8">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">Liste des Services</h1>
@@ -68,6 +67,6 @@ export default function ServicesList() {
           </table>
         </div>
       </div>
-    </Layout>
+    
   );
 }

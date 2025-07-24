@@ -25,7 +25,7 @@ export default function NewTicketForm() {
   const isSubmitting = navigation.state === "submitting";
 
   return (
-    <Layout>
+    
       <div className="bg-white rounded-lg shadow p-6 max-w-3xl mx-auto">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Créer un nouveau ticket</h2>
         
@@ -112,6 +112,6 @@ export default function NewTicketForm() {
           </div>
         </Form>
       </div>
-    </Layout>
+    
   );
 }
