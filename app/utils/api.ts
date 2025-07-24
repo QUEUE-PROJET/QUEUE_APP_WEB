@@ -68,20 +68,6 @@ export async function pingAPI() {
 }
 
 
-// export async function registerEnterpriseAgent(formData: FormData) {
-//   try {
-//     const response = await apiFetcher("/api/register/enterprise-agent-base64", {
-//       method: "POST",
-//       body: formData,
-//       credentials: "include",
-//     });
-
-//     return response;
-//   } catch (error) {
-//     console.error("Erreur lors de l'inscription de l'agent d'entreprise :", error);
-//     throw error;
-//   }
-// }
 
 // // export async function verifyEmailOtp(email: string, otp: string) {
 // //   return apiFetcher("/api/verify-email-otp", {
@@ -98,12 +84,13 @@ export async function resendEmailOtp(email: string) {
 }
 
 export async function getEnterpriseCategories() {
-  const response = await fetch(`${process.env.API_URL}/api/entreprise/categories`);
+  const response = await fetch(`${BASE_API_URL}/api/entreprise/categories`);
   if (!response.ok) {
     throw new Error("Failed to fetch enterprise categories");
   }
-  return response.json();
+  return response.json(); // on suppose que c’est un tableau de strings
 }
+
 
 
 // app/utils/api.ts
