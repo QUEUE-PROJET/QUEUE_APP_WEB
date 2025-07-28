@@ -1,21 +1,32 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { getSession } from "~/services/session.server";
+import { requireAuth } from "~/services/auth.server";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await getSession(request.headers.get("Cookie"));
-  const user = session.get("user");
-  const accessToken = session.get("access_token");
+// export async function loader({ request }: LoaderFunctionArgs) {
+//   const session = await getSession(request.headers.get("Cookie"));
+//   const user = session.get("user");
+//   const accessToken = session.get("access_token");
 
-  if (!user || !accessToken) {
-    throw new Response("Non autorisé", { status: 401 });
-  }
+//   if (!user || !accessToken) {
+//     throw new Response("Non autorisé", { status: 401 });
+//   }
 
   
 
+//   return json({
+//     user,
+//     accessToken: accessToken ? "***" + accessToken.slice(-4) : null, // Masquage partiel du token
+//     timestamp: new Date().toISOString()
+//   });
+// }
+
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const { user, token } = await requireAuth(request, "ENTREPRISE_AGENT");
+
   return json({
     user,
-    accessToken: accessToken ? "***" + accessToken.slice(-4) : null, // Masquage partiel du token
-    timestamp: new Date().toISOString()
+    accessToken: token ? "***" + token.slice(-4) : null,
+    timestamp: new Date().toISOString(),
   });
 }
 

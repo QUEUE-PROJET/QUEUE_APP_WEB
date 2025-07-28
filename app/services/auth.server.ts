@@ -8,7 +8,6 @@ type LoginCredentials = {
   password: string;
   rememberMe: boolean;
 };
-
 export async function login({
   email,
   password,
@@ -35,10 +34,33 @@ export async function login({
     // Stockage des infos utilisateur
     session.set("access_token", response.access_token);
     session.set("user", response.user);
+    
+    // Vérification plus robuste du changement de mot de passe
+    const mustChangePassword = response.must_change_password || 
+                             response.user?.must_change_password;
+
+    if (mustChangePassword) {
+      // Stocker le flag dans la session pour usage ultérieur
+      session.set("must_change_password", true);
+      
+      return {
+        success: true,
+        mustChangePassword: true,
+        redirectTo: "/change-password",
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      };
+    }
+
+    // Redirection basée sur le rôle
+    const redirectTo = response.user.role === "ENTREPRISE_AGENT" 
+      ? "/dashboard" 
+      : "/admin";
 
     return {
       success: true,
-      userRole: response.user.role,
+      redirectTo,
       headers: {
         "Set-Cookie": await commitSession(session, {
           expires: rememberMe ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) : undefined,
@@ -119,30 +141,21 @@ export async function requireAuth(
     throw redirect(`/login?redirectTo=${encodeURIComponent(url.pathname)}`);
   }
 
+  if (user.must_change_password && !request.url.includes("/change-password")) {
+    throw redirect("/change-password");
+  }
+
   // Vérification du rôle si spécifié
   if (requiredRole && user.role !== requiredRole) {
     // Rediriger vers le dashboard approprié selon le rôle
     const redirectTo = user.role === 'ENTREPRISE_AGENT' 
       ? '/dashboard' 
-      : '/admin/dashboard';
+      : '/admin';
     
     throw redirect(redirectTo);
   }
 
-  // Vérification optionnelle de la validité du token côté API
-  try {
-    // Vous pourriez faire une requête de vérification ici si nécessaire
-    // await apiFetcher("/verify-token", { headers: { Authorization: `Bearer ${token}` } });
-    
     return { token, user };
-  } catch (error) {
-    // Token invalide - on nettoie et redirige
-    throw redirect("/login", {
-      headers: {
-        "Set-Cookie": await destroySession(session),
-      },
-    });
-  }
 }
 
 // Ajoutez cette nouvelle fonction pour vérifier le rôle
@@ -208,6 +221,35 @@ export async function resendEmailOtp(request: Request, email: string) {
     };
   }
 }
+
+export async function changePassword({
+  email,
+  old_password,
+  new_password,
+}: {
+  email: string;
+  old_password: string;
+  new_password: string;
+}) {
+  try {
+    const response = await apiFetcher("/api/change-password", {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        old_password,
+        new_password,
+      }),
+    });
+
+    return response;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Une erreur inconnue est survenue");
+  }
+}
+
 
 export { getSession };
 
