@@ -176,12 +176,7 @@ export async function rejectCompany(companyId: string , token: string) {
   
 }
 
-// export async function toggleCompanyStatus(companyId: string, isActive: boolean) {
-//   return apiFetcher(`/entreprises/${companyId}/status`, {
-//     method: "PUT",
-//     body: JSON.stringify({ is_active: isActive }),
-//   });
-// }
+
 
 export async function deleteCompany(companyId: string) {
   return apiFetcher(`/api/entreprises/${companyId}`, {
@@ -204,6 +199,76 @@ export async function changePassword(payload: {
       },
   });
 }
+
+
+//  liste des employees d'une entreprise
+
+
+export async function fetchEmployes(token: string) {
+  return apiFetcher("/api/employes", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`, // ajoute le token ici
+    },
+  });
+}
+
+// Liste des agences liées à l'entreprise de l'agent connecté
+export async function fetchAgencesForAgent(token: string) {
+  return apiFetcher("/api/agences-de-mon-entreprise", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`, 
+    },
+
+  });
+}
+
+
+// Créer un employé
+export async function createEmploye(payload: {
+  name: string;
+  email: string;
+  password: string;
+  agence_id: string;
+},
+token : string
+) {
+  return apiFetcher("/api/employes", {
+    method: "POST",
+    body: JSON.stringify(payload),
+     headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json", 
+    },
+  });
+}
+
+
+
+// Supprimer un employé
+export async function deleteEmploye(id: string , token: string) {
+  return apiFetcher(`/api/employes/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`, 
+    },
+  });
+}
+
+// Activer ou désactiver un employé
+export async function toggleEmploye(id: string, isActive: boolean, token: string) {
+  return apiFetcher(`/api/employes/${id}/activer?is_active=${isActive}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`, 
+      "Content-Type": "application/json",
+    },
+  });
+}
+
+
+
 
 
 
