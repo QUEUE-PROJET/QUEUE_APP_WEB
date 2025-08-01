@@ -268,6 +268,56 @@ export async function toggleEmploye(id: string, isActive: boolean, token: string
 }
 
 
+// creattion d'une agence 
+export async function createAgence(payload: any, token: string) {
+  return apiFetcher("/api/agences", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+}
+// Récupérer les agences d'une entreprise
+export async function fetchAgences(token: string) {
+  return apiFetcher("/api/agences", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function updateAgence(agenceId: string, payload: any, token: string) {
+  return apiFetcher(`/api/agences/${agenceId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function deleteAgence(agenceId: string, token: string) {
+  return apiFetcher(`/api/agences/${agenceId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  
+}
+
+export async function fetchAgenceDetails(agenceId: string, token: string) {
+  return apiFetcher(`/api/agences/${agenceId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
 
 
 
