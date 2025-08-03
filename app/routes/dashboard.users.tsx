@@ -1,9 +1,10 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
-import { requireAuth } from "~/services/auth.server";
+import { requireAuth, requireRole } from "~/services/auth.server";
 import { deleteEmploye, fetchEmployes, toggleEmploye } from "~/utils/api";
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  await requireRole(request, "ENTREPRISE_AGENT");
   const { token } = await requireAuth(request);
   const employes = await fetchEmployes(token);
   return json({ employes });
@@ -47,7 +48,7 @@ export default function UsersList() {
       </div>
 
       {employes.length === 0 ? (
-       <div className="flex flex-col items-center justify-center bg-white p-10 rounded-lg shadow text-gray-700 text-center space-y-4">
+        <div className="flex flex-col items-center justify-center bg-white p-10 rounded-lg shadow text-gray-700 text-center space-y-4">
           {/* Icône utilisateur */}
           <svg
             className="w-16 h-16 text-blue-300"
@@ -75,6 +76,7 @@ export default function UsersList() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Agence</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Services</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
@@ -85,47 +87,60 @@ export default function UsersList() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.agence_name}</td>
+                  {/* ✅ Services */}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {user.services && user.services.length > 0 ? (
+                      <ul className="space-y-0.5">
+                        {user.services.map((service: any) => (
+                          <li key={service.id} className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs inline-block mr-1">
+                            {service.name}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <span className="text-gray-400 italic text-xs">Aucun</span>
+                    )}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        user.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                      }`}
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                        }`}
                     >
                       {user.is_active ? "Actif" : "Inactif"}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
-  {/* Toggle actif/inactif */}
-  <Form method="post" className="inline">
-    <input type="hidden" name="id" value={user.id} />
-    <input type="hidden" name="is_active" value={user.is_active} />
-    <button
-      type="submit"
-      name="intent"
-      value="toggle"
-      className="text-yellow-600 hover:text-yellow-900"
-    >
-      {user.is_active ? "Désactiver" : "Activer"}
-    </button>
-  </Form>
+                    {/* Toggle actif/inactif */}
+                    <Form method="post" className="inline">
+                      <input type="hidden" name="id" value={user.id} />
+                      <input type="hidden" name="is_active" value={user.is_active} />
+                      <button
+                        type="submit"
+                        name="intent"
+                        value="toggle"
+                        className="text-yellow-600 hover:text-yellow-900"
+                      >
+                        {user.is_active ? "Désactiver" : "Activer"}
+                      </button>
+                    </Form>
 
-  {/* Supprimer */}
-  <Form method="post" className="inline" onSubmit={(e) => {
-    if (!confirm("Es-tu sûr de vouloir supprimer cet employé ?")) {
-      e.preventDefault();
-    }
-  }}>
-    <input type="hidden" name="id" value={user.id} />
-    <button
-      type="submit"
-      name="intent"
-      value="delete"
-      className="text-red-600 hover:text-red-900"
-    >
-      Supprimer
-    </button>
-  </Form>
-</td>
+                    {/* Supprimer */}
+                    <Form method="post" className="inline" onSubmit={(e) => {
+                      if (!confirm("Es-tu sûr de vouloir supprimer cet employé ?")) {
+                        e.preventDefault();
+                      }
+                    }}>
+                      <input type="hidden" name="id" value={user.id} />
+                      <button
+                        type="submit"
+                        name="intent"
+                        value="delete"
+                        className="text-red-600 hover:text-red-900"
+                      >
+                        Supprimer
+                      </button>
+                    </Form>
+                  </td>
 
                 </tr>
               ))}

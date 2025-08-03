@@ -1,10 +1,11 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useFetcher, useLoaderData, useNavigation } from "@remix-run/react";
-import { requireAuth } from "~/services/auth.server";
+import { requireAuth, requireRole } from "~/services/auth.server";
 import { fetchAgences } from "~/utils/api";
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  await requireRole(request, "ENTREPRISE_AGENT");
   const { token } = await requireAuth(request);
   const agences = await fetchAgences(token);
   return json({ agences });

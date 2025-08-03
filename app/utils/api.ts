@@ -226,20 +226,38 @@ export async function fetchAgencesForAgent(token: string) {
 
 
 // Créer un employé
+// export async function createEmploye(payload: {
+//   name: string;
+//   email: string;
+//   password: string;
+//   agence_id: string;
+// },
+// token : string
+// ) {
+//   return apiFetcher("/api/employes", {
+//     method: "POST",
+//     body: JSON.stringify(payload),
+//      headers: {
+//       Authorization: `Bearer ${token}`,
+//       "Content-Type": "application/json", 
+//     },
+//   });
+// }
+
+
 export async function createEmploye(payload: {
   name: string;
   email: string;
   password: string;
   agence_id: string;
-},
-token : string
-) {
+  service_ids: string[];
+}, token: string) {
   return apiFetcher("/api/employes", {
     method: "POST",
     body: JSON.stringify(payload),
-     headers: {
+    headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json", 
+      "Content-Type": "application/json",
     },
   });
 }
@@ -318,7 +336,14 @@ export async function fetchAgenceDetails(agenceId: string, token: string) {
     },
   });
 }
-
-
+// Récupérer les services d'une agence
+export async function fetchServicesByAgence(agenceId: string, token: string) {
+  return apiFetcher(`/api/agences/${agenceId}/services`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
 
 
