@@ -12,7 +12,7 @@ interface User {
 
 interface LayoutProps {
   children: React.ReactNode;
-  user?: User; 
+  user?: User;
 }
 
 export function LayoutAdmin({ children, user }: LayoutProps) {
@@ -28,71 +28,68 @@ export function LayoutAdmin({ children, user }: LayoutProps) {
             <span className="font-semibold text-lg">QueueManager - Admin</span>
           </div>
         </div>
-        
+
         <nav className="mt-8">
           <NavLink
             to="/dashboard"
             className={({ isActive }) =>
-              `flex items-center px-6 py-3 text-sm font-medium transition-colors ${
-                isActive
-                  ? "bg-blue-800 border-r-3 border-yellow-400"
-                  : "hover:bg-blue-800"
+              `flex items-center px-6 py-3 text-sm font-medium transition-colors ${isActive
+                ? "bg-blue-800 border-r-3 border-yellow-400"
+                : "hover:bg-blue-800"
               }`
             }
           >
             <BarChart3 className="w-5 h-5 mr-3" />
             Tableau de bord
           </NavLink>
-          
+
           <NavLink
             to="/entreprises"
             className={({ isActive }) =>
-              `flex items-center px-6 py-3 text-sm font-medium transition-colors ${
-                isActive
-                  ? "bg-blue-800 border-r-3 border-yellow-400"
-                  : "hover:bg-blue-800"
+              `flex items-center px-6 py-3 text-sm font-medium transition-colors ${isActive
+                ? "bg-blue-800 border-r-3 border-yellow-400"
+                : "hover:bg-blue-800"
               }`
             }
           >
             <Building2 className="w-5 h-5 mr-3" />
             Entreprises
           </NavLink>
-          
+
           <NavLink
             to="/dashboard/users"
             className={({ isActive }) =>
-              `flex items-center px-6 py-3 text-sm font-medium transition-colors ${
-                isActive
-                  ? "bg-blue-800 border-r-3 border-yellow-400"
-                  : "hover:bg-blue-800"
+              `flex items-center px-6 py-3 text-sm font-medium transition-colors ${isActive
+                ? "bg-blue-800 border-r-3 border-yellow-400"
+                : "hover:bg-blue-800"
               }`
             }
           >
             <Users className="w-5 h-5 mr-3" />
             Utilisateurs
           </NavLink>
-          
+
           <NavLink
             to="/stats"
             className={({ isActive }) =>
-              `flex items-center px-6 py-3 text-sm font-medium transition-colors ${
-                isActive
-                  ? "bg-blue-800 border-r-3 border-yellow-400"
-                  : "hover:bg-blue-800"
+              `flex items-center px-6 py-3 text-sm font-medium transition-colors ${isActive
+                ? "bg-blue-800 border-r-3 border-yellow-400"
+                : "hover:bg-blue-800"
               }`
             }
           >
             <TrendingUp className="w-5 h-5 mr-3" />
             Statistiques
           </NavLink>
+
           
+
           <NavLink
             to="/dashboard/settings"
             className={({ isActive }) =>
-              `flex items-center px-6 py-3 text-sm font-medium transition-colors ${
-                isActive
-                  ? "bg-blue-800 border-r-3 border-yellow-400"
-                  : "hover:bg-blue-800"
+              `flex items-center px-6 py-3 text-sm font-medium transition-colors ${isActive
+                ? "bg-blue-800 border-r-3 border-yellow-400"
+                : "hover:bg-blue-800"
               }`
             }
           >
@@ -101,7 +98,7 @@ export function LayoutAdmin({ children, user }: LayoutProps) {
           </NavLink>
         </nav>
       </div>
-      
+
       {/* Main content */}
       <div className="flex-1">
         {/* Header */}
@@ -118,7 +115,7 @@ export function LayoutAdmin({ children, user }: LayoutProps) {
             </div>
           </div>
         </header>
-        
+
         {/* Page content */}
         <main className="p-8">
           {children}
