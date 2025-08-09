@@ -2,7 +2,7 @@
 import { redirect } from "@remix-run/node";
 import { apiFetcher } from "~/utils/api";
 import { commitSession, destroySession, getSession } from "./session.server";
-type UserRole = 'ENTREPRISE_AGENT' | 'ADMINISTRATEUR';
+type UserRole = 'ENTREPRISE_AGENT' | 'ADMINISTRATEUR' |'EMPLOYE' ;
 type LoginCredentials = {
   email: string;
   password: string;
@@ -28,6 +28,7 @@ export async function login({
         remember_me: rememberMe,
       }),
     });
+    console.log("User data from API login response:", response.user);
 
     const session = await getSession(request.headers.get("Cookie"));
     
@@ -54,9 +55,14 @@ export async function login({
     }
 
     // Redirection basée sur le rôle
-    const redirectTo = response.user.role === "ENTREPRISE_AGENT" 
-      ? "/dashboard" 
-      : "/admin";
+    let redirectTo = "/dashboard";
+    if (response.user.role === "ADMINISTRATEUR") {
+      redirectTo = "/admin";
+    }
+    // Pour un employé, on redirige vers le dashboard de son entreprise
+    if (response.user.role === "EMPLOYE" && response.user.entreprise_id) {
+      redirectTo = `/dashboard?entreprise=${response.user.entreprise_id}`;
+    }
 
     return {
       success: true,
@@ -148,7 +154,7 @@ export async function requireAuth(
   // Vérification du rôle si spécifié
   if (requiredRole && user.role !== requiredRole) {
     // Rediriger vers le dashboard approprié selon le rôle
-    const redirectTo = user.role === 'ENTREPRISE_AGENT' 
+    const redirectTo = user.role === 'ENTREPRISE_AGENT' || user.role === 'EMPLOYE'
       ? '/dashboard' 
       : '/admin';
     
