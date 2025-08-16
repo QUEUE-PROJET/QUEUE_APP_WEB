@@ -13,6 +13,7 @@ import "./tailwind.css";
 
 export const links: LinksFunction = () => [
     { rel: "stylesheet", href: "/votre-feuille-de-style.css" },
+    { rel: "stylesheet", href: "/app/styles/animations.css" },
 ];
 
 export async function loader({ request }: LoaderFunctionArgs) {
