@@ -5,7 +5,7 @@ import {
     useNavigation,
     useSearchParams,
 } from "@remix-run/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { login } from "~/services/auth.server";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -16,43 +16,100 @@ export async function action({ request }: ActionFunctionArgs) {
         rememberMe: formData.get("rememberMe") === "on",
     };
 
-    const result = await login({ ...credentials, request });
-
-    if (result.redirectTo) {
-        return redirect(result.redirectTo, {
-            headers: result.headers || new Headers(),
-        });
+    // Validation côté serveur avant l'appel API
+    if (!credentials.email || !credentials.password) {
+        return json(
+            {
+                error: "Veuillez renseigner tous les champs requis",
+                email: credentials.email,
+                rememberMe: credentials.rememberMe,
+            },
+            { status: 400 }
+        );
     }
 
-    if (result.success) {
-        // Cas où le changement de mot de passe est requis
-        if (result.mustChangePassword) {
-            return redirect("/change-password", {
-                headers: result.headers,
+    // Validation du format email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(credentials.email)) {
+        return json(
+            {
+                error: "Veuillez entrer une adresse email valide",
+                email: credentials.email,
+                rememberMe: credentials.rememberMe,
+            },
+            { status: 400 }
+        );
+    }
+
+    try {
+        const result = await login({ ...credentials, request });
+
+        // Gestion des redirections spécifiques
+        if (result.redirectTo) {
+            return redirect(result.redirectTo, {
+                headers: result.headers || new Headers(),
             });
         }
 
-        // Cas normal
-        const userRole = result.userRole;
-        const redirectTo =
-            userRole === "ENTREPRISE_AGENT" ? "/dashboard" : "/admin";
+        if (result.success) {
+            // Cas où le changement de mot de passe est requis
+            if (result.mustChangePassword) {
+                return redirect("/change-password", {
+                    headers: result.headers,
+                });
+            }
 
-        return redirect(redirectTo, {
-            headers: result.headers,
-        });
-    }
-
-    return json(
-        {
-            error: result.error,
-            email: credentials.email,
-            rememberMe: credentials.rememberMe,
-        },
-        {
-            status: 401,
-            headers: result.headers,
+            // Pour toute autre redirection réussie, on laisse la logique côté client s'en charger
+            return json(
+                {
+                    success: true,
+                    redirectTo: result.redirectTo || "/dashboard",
+                },
+                {
+                    headers: result.headers,
+                }
+            );
         }
-    );
+
+        // En cas d'échec de connexion
+        return json(
+            {
+                error: result.error || "Identifiants incorrects",
+                email: credentials.email,
+                rememberMe: credentials.rememberMe,
+            },
+            {
+                status: 401,
+                headers: result.headers,
+            }
+        );
+    } catch (error) {
+        console.error("Erreur lors de la connexion:", error);
+
+        // Gestion des erreurs spécifiques
+        let errorMessage = "Une erreur est survenue lors de la connexion";
+
+        if (error instanceof Error) {
+            if (error.message.includes("Failed to fetch") || error.message.includes("Network")) {
+                errorMessage = "Problème de connexion au serveur. Veuillez réessayer.";
+            } else if (error.message.includes("email")) {
+                errorMessage = error.message;
+            } else if (error.message.includes("mot de passe")) {
+                errorMessage = error.message;
+            } else {
+                errorMessage = error.message;
+            }
+        }
+
+        return json(
+            {
+                error: errorMessage,
+                email: credentials.email,
+                rememberMe: credentials.rememberMe,
+            },
+            { status: 500 }
+        );
+    }
 }
 
 export default function Login() {
@@ -61,9 +118,70 @@ export default function Login() {
     const navigation = useNavigation();
     const isSubmitting = navigation.state === "submitting";
     const [showPassword, setShowPassword] = useState(false);
+    const [emailError, setEmailError] = useState("");
+    const [isRedirecting, setIsRedirecting] = useState(false);
+
+    // Gestion de la redirection côté client pour améliorer les performances
+    useEffect(() => {
+        if (actionData && 'success' in actionData && actionData.success && actionData.redirectTo) {
+            setIsRedirecting(true);
+            // Redirection immédiate côté client
+            setTimeout(() => {
+                window.location.href = actionData.redirectTo;
+            }, 100); // Petit délai pour s'assurer que l'état est mis à jour
+        }
+    }, [actionData]);
+
+    // Validation email en temps réel
+    const validateEmail = (email: string) => {
+        if (!email) {
+            setEmailError("L'adresse email est requise");
+            return false;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setEmailError("Veuillez entrer une adresse email valide");
+            return false;
+        }
+        setEmailError("");
+        return true;
+    };
+
+    // Gestion de l'état de redirection après soumission réussie
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        const formData = new FormData(event.currentTarget);
+        const email = formData.get("email") as string;
+
+        if (!validateEmail(email)) {
+            event.preventDefault();
+            return;
+        }
+
+        // Marquer comme en cours de redirection après validation
+        setTimeout(() => {
+            if (isSubmitting) {
+                setIsRedirecting(true);
+            }
+        }, 1500); // Réduit le délai pour une meilleure perception
+    };
+
+    // Gestion des données d'action avec type safety
+    const errorData = actionData && 'error' in actionData ? actionData : null;
+    const emailValue = errorData?.email || "";
+    const rememberMeValue = errorData?.rememberMe || false;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 font-sans">
+            {/* Overlay de redirection */}
+            {isRedirecting && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-8 rounded-2xl shadow-2xl text-center">
+                        <div className="animate-spin mx-auto mb-4 h-8 w-8 border-4 border-[#00509d] border-t-transparent rounded-full"></div>
+                        <p className="text-lg font-semibold text-[#00296b]">Redirection en cours...</p>
+                    </div>
+                </div>
+            )}
+
             {/* Contenu principal */}
             <div className="min-h-screen flex items-center justify-center px-4 py-12">
                 <div className="w-full max-w-lg">
@@ -90,7 +208,7 @@ export default function Login() {
 
                         {/* Formulaire */}
                         <div className="px-8 md:px-10 pb-12">
-                            <Form className="space-y-8" method="post">
+                            <Form className="space-y-8" method="post" onSubmit={handleSubmit}>
                                 <input
                                     type="hidden"
                                     name="redirectTo"
@@ -133,11 +251,16 @@ export default function Login() {
                                             type="email"
                                             autoComplete="email"
                                             required
-                                            defaultValue={actionData?.email}
+                                            defaultValue={emailValue}
                                             placeholder="votre@email.com"
-                                            className="w-full pl-14 pr-5 py-4 border-2 border-gray-200 rounded-2xl transition-all duration-300 bg-white text-gray-900 placeholder-gray-400 hover:border-gray-300 focus:border-[#003f88] focus:ring-0 caret-[#003f88] text-lg font-medium shadow-sm hover:shadow-md focus:shadow-lg group-hover:scale-105 transform"
+                                            onBlur={(e) => validateEmail(e.target.value)}
+                                            className={`w-full pl-14 pr-5 py-4 border-2 rounded-2xl transition-all duration-300 bg-white text-gray-900 placeholder-gray-400 hover:border-gray-300 focus:ring-0 caret-[#003f88] text-lg font-medium shadow-sm hover:shadow-md focus:shadow-lg group-hover:scale-105 transform ${emailError ? 'border-red-300 focus:border-red-500' : 'border-gray-200 focus:border-[#003f88]'
+                                                }`}
                                         />
                                     </div>
+                                    {emailError && (
+                                        <p className="text-sm text-red-600 font-medium">{emailError}</p>
+                                    )}
                                 </div>
 
                                 {/* Champ Mot de passe */}
@@ -240,9 +363,7 @@ export default function Login() {
                                             id="rememberMe"
                                             name="rememberMe"
                                             type="checkbox"
-                                            defaultChecked={
-                                                actionData?.rememberMe
-                                            }
+                                            defaultChecked={rememberMeValue}
                                             className="w-5 h-5 rounded-lg border-2 border-gray-300 text-[#003f88] focus:ring-[#003f88] focus:ring-2 transition-all duration-300 transform group-hover:scale-110"
                                         />
                                         <label
@@ -278,7 +399,7 @@ export default function Login() {
                                 </div>
 
                                 {/* Message d'erreur */}
-                                {actionData?.error && (
+                                {errorData?.error && (
                                     <div className="p-5 rounded-2xl border-2 border-red-200 bg-red-50 transform transition-all duration-300 hover:scale-105">
                                         <div className="flex items-center">
                                             <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-4 flex-shrink-0">
@@ -300,7 +421,7 @@ export default function Login() {
                                                 </svg>
                                             </div>
                                             <p className="text-base font-bold text-red-800">
-                                                {actionData.error}
+                                                {errorData.error}
                                             </p>
                                         </div>
                                     </div>
@@ -310,17 +431,16 @@ export default function Login() {
                                 <div className="pt-6">
                                     <button
                                         type="submit"
-                                        disabled={isSubmitting}
-                                        className={`group relative w-full py-5 px-8 rounded-2xl text-xl font-black transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-xl hover:shadow-2xl flex items-center justify-center overflow-hidden ${
-                                            isSubmitting
+                                        disabled={isSubmitting || isRedirecting || !!emailError}
+                                        className={`group relative w-full py-5 px-8 rounded-2xl text-xl font-black transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-xl hover:shadow-2xl flex items-center justify-center overflow-hidden ${isSubmitting || isRedirecting
                                                 ? "bg-gray-400"
                                                 : "bg-gradient-to-r from-[#00296b] via-[#003f88] to-[#00509d]"
-                                        } text-white`}
+                                            } text-white`}
                                     >
                                         {/* Effet de brillance au hover */}
                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-all duration-1000"></div>
 
-                                        {isSubmitting ? (
+                                        {isSubmitting || isRedirecting ? (
                                             <>
                                                 <svg
                                                     className="animate-spin -ml-1 mr-3 h-6 w-6 text-white"
@@ -343,7 +463,7 @@ export default function Login() {
                                                     ></path>
                                                 </svg>
                                                 <span className="relative z-10">
-                                                    Connexion en cours...
+                                                    {isRedirecting ? "Redirection..." : "Connexion en cours..."}
                                                 </span>
                                             </>
                                         ) : (

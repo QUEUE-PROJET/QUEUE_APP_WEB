@@ -75,6 +75,17 @@
     }
 }
 
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Utility classes */
 .animate-fade-in-up {
     animation: fadeInUp 0.8s ease-out forwards;
@@ -103,6 +114,10 @@
 
 .animate-scale-pulse {
     animation: scale-pulse 2s ease-in-out infinite;
+}
+
+.animate-appear {
+    animation: appear 0.4s ease-out forwards;
 }
 
 /* Hover effects */

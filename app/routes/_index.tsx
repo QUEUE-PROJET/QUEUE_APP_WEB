@@ -116,7 +116,7 @@ export default function Index() {
                         <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 border border-yellow-400/30 mb-8">
                             <SparkleIcon className="w-4 h-4 mr-2 text-yellow-600" />
                             <span className="text-sm font-medium text-blue-900">
-                                Solution N°1 en France
+                                Solution N°1 au Togo
                             </span>
                         </div>
 

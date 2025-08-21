@@ -56,6 +56,10 @@ export async function apiFetcher(
       if (res.status === 403) {
         throw new Error("Vous n'avez pas les permissions nécessaires");
       }
+       
+      if (res.status === 204) {
+      return null;
+  }
       
       throw new Error(
         responseBody?.detail || responseBody?.message || "Une erreur inconnue s'est produite"
@@ -65,6 +69,8 @@ export async function apiFetcher(
 
       
     }
+
+     
 
     // console.log("[API FETCHER] ✅ Réponse OK", responseBody);
     return responseBody;

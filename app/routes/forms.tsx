@@ -31,6 +31,7 @@ export default function RegisterPage() {
     );
     const [phoneNumber, setPhoneNumber] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isRedirecting, setIsRedirecting] = useState(false);
 
     // Gestion agences et services
     type AgenceDraft = {
@@ -232,6 +233,9 @@ export default function RegisterPage() {
             const result = await registerEnterpriseAgentBase64(payload);
             console.log("✅ Réponse du backend :", result);
 
+            // Marquer la redirection comme en cours
+            setIsRedirecting(true);
+
             // Réinitialisation complète du formulaire
             form.reset();
             setDirectServices([]);
@@ -249,11 +253,10 @@ export default function RegisterPage() {
             setCarte("");
             setNoAgency(false);
 
-            setTimeout(() => {
-                navigate(
-                    `/verify-email?email=${encodeURIComponent(payload.email)}`
-                );
-            }, 0);
+            // Redirection immédiate
+            navigate(
+                `/verify-email?email=${encodeURIComponent(payload.email)}`
+            );
         } catch (err: unknown) {
             let errorMessage = "Une erreur est survenue";
             const maybeResp = err as {
@@ -283,6 +286,16 @@ export default function RegisterPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 font-sans">
+            {/* Overlay de redirection */}
+            {isRedirecting && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-8 rounded-2xl shadow-2xl text-center">
+                        <div className="animate-spin mx-auto mb-4 h-8 w-8 border-4 border-[#00509d] border-t-transparent rounded-full"></div>
+                        <p className="text-lg font-semibold text-[#00296b]">Redirection vers la vérification email...</p>
+                    </div>
+                </div>
+            )}
+            
             {/* Enhanced Navigation */}
             <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-lg border-b border-gray-200 shadow-lg transition-all duration-300">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1774,20 +1787,23 @@ export default function RegisterPage() {
 
                             <button
                                 type="submit"
-                                disabled={!canSubmitForm() || isSubmitting}
+                                disabled={!canSubmitForm() || isSubmitting || isRedirecting}
                                 className={`group relative px-16 py-5 rounded-2xl text-xl font-black transition-all duration-300 transform shadow-2xl ${
                                     canSubmitForm()
                                         ? "bg-gradient-to-r from-blue-900 to-blue-800 text-white hover:scale-105 hover:shadow-blue-900/25"
                                         : "bg-gray-200 text-gray-500 cursor-not-allowed"
                                 } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
                             >
-                                {isSubmitting ? (
+                                {isSubmitting || isRedirecting ? (
                                     <>
                                         <span className="opacity-0">
                                             Créer mon compte entreprise
                                         </span>
                                         <div className="absolute inset-0 flex items-center justify-center">
-                                            <div className="animate-spin rounded-full h-8 w-8 border-b-3 border-white"></div>
+                                            <div className="animate-spin rounded-full h-8 w-8 border-b-3 border-white mr-3"></div>
+                                            <span className="text-white font-bold">
+                                                {isRedirecting ? "Redirection..." : "Création en cours..."}
+                                            </span>
                                         </div>
                                     </>
                                 ) : (
