@@ -105,8 +105,12 @@ export interface UsersResponse {
 }
 
 // Lister les utilisateurs avec pagination
-export async function listUsers(page: number = 1, limit: number = 5): Promise<UsersResponse> {
-  return apiFetcher(`/api/users?page=${page}&limit=${limit}`);
+export async function listUsers(page: number = 1, limit: number = 5): Promise<UsersResponse | User[]> {
+  const response = await apiFetcher(`/api/users/?page=${page}&limit=${limit}`);
+  
+  // Si la réponse est un tableau d'utilisateurs, on la retourne directement
+  // Le loader se chargera de la formater correctement
+  return response;
 }
 
 // Obtenir un utilisateur spécifique
@@ -680,5 +684,52 @@ export async function updateProfile(
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(payload),
+  });
+}
+
+// =================== RAPPORTS API ===================
+
+// Récupérer le rapport administrateur
+export async function fetchRapportAdministrateur(
+  dateDebut: string,
+  dateFin: string,
+  token: string
+) {
+  return apiFetcher(`/api/rapports/administrateur?date_debut=${dateDebut}&date_fin=${dateFin}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// Récupérer le rapport d'une entreprise spécifique
+export async function fetchRapportEntreprise(
+  entrepriseId: string,
+  dateDebut: string,
+  dateFin: string,
+  token: string
+) {
+  return apiFetcher(`/api/rapports/entreprise/${entrepriseId}?date_debut=${dateDebut}&date_fin=${dateFin}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// Exporter le rapport d'une entreprise
+export async function exportRapportEntreprise(
+  entrepriseId: string,
+  dateDebut: string,
+  dateFin: string,
+  formatExport: 'json' | 'csv' = 'json',
+  token: string
+) {
+  return apiFetcher(`/api/rapports/entreprise/${entrepriseId}/export?date_debut=${dateDebut}&date_fin=${dateFin}&format_export=${formatExport}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 }

@@ -15,8 +15,8 @@ interface SidebarProps {
 
 export function Sidebar({ notificationCount = 0 }: SidebarProps) {
     return (
-        <div className="hidden md:flex md:flex-shrink-0">
-            <div className="flex flex-col w-72 h-screen bg-gradient-to-b from-blue-900 via-blue-800 to-blue-700 text-white relative overflow-hidden shadow-2xl">
+        <div className="hidden md:flex md:flex-shrink-0 fixed left-0 top-0 z-30">
+            <div className="flex flex-col w-64 h-screen bg-gradient-to-b from-blue-900 via-blue-800 to-blue-700 text-white relative overflow-hidden shadow-2xl">
                 {/* REVOLUTIONARY Background Effects */}
                 <div className="absolute inset-0 opacity-30">
                     <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full blur-3xl animate-pulse"></div>

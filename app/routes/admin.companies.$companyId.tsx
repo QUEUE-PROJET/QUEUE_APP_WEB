@@ -452,7 +452,7 @@ export default function CompanyDetails() {
     : 0;
 
   return (
-    <div className="flex h-screen" style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)' }}>
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)' }}>
       <Sidebar />
       
       {/* Loading Overlay */}
@@ -472,7 +472,7 @@ export default function CompanyDetails() {
         </div>
       )}
       
-      <div className="flex-1 overflow-y-auto">
+      <div className="ml-64 overflow-y-auto">
         <div className="max-w-7xl mx-auto px-6 py-8">
           {/* Header */}
           <div className="mb-8">

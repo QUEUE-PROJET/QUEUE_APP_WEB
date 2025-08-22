@@ -3,7 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import { Sidebar } from "~/components/SidebarAdmin";
 import { fetchCompanies } from "~/utils/api";
 
-import { BarChart3, Building2, Clock, PieChart, Ticket } from "lucide-react";
+import { BarChart3, Building2, Clock, PieChart, } from "lucide-react";
 import {
     Bar,
     BarChart,
@@ -135,10 +135,10 @@ export default function AdminDashboard() {
     }));
 
     return (
-        <div className="flex h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30 overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30">
             <Sidebar notificationCount={5} />
 
-            <div className="flex-1 overflow-y-auto">
+            <div className="ml-64 overflow-y-auto">
 
                 {/* Main Content - 3 Column Layout */}
                 <div className="p-8">
@@ -214,25 +214,7 @@ export default function AdminDashboard() {
                                         <div className="absolute -top-8 -right-8 w-24 h-24 bg-amber-400/10 rounded-full" />
                                     </div>
 
-                                    <div className="group relative overflow-hidden flex items-center justify-between p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100/50 border border-blue-200/60 hover:from-blue-100 hover:to-blue-200/50 transition-all duration-300">
-                                        <div className="flex items-center space-x-3">
-                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
-                                                <Ticket className="w-6 h-6 text-white" />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-semibold text-gray-900">
-                                                    Tickets traités
-                                                </p>
-                                                <p className="text-xs text-blue-600 font-medium">
-                                                    Cette semaine
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="text-3xl font-black text-blue-700">
-                                            {stats.processedTickets.toLocaleString()}
-                                        </div>
-                                        <div className="absolute -top-8 -right-8 w-24 h-24 bg-blue-400/10 rounded-full" />
-                                    </div>
+
                                 </div>
                             </div>
 
@@ -329,14 +311,13 @@ export default function AdminDashboard() {
                                         >
                                             <div className="flex items-center space-x-2">
                                                 <div
-                                                    className={`w-4 h-4 rounded-full shadow-sm ${
-                                                        item.color === "#10B981"
+                                                    className={`w-4 h-4 rounded-full shadow-sm ${item.color === "#10B981"
                                                             ? "bg-emerald-500"
                                                             : item.color ===
-                                                              "#F59E0B"
-                                                            ? "bg-amber-500"
-                                                            : "bg-red-500"
-                                                    }`}
+                                                                "#F59E0B"
+                                                                ? "bg-amber-500"
+                                                                : "bg-red-500"
+                                                        }`}
                                                 ></div>
                                                 <span className="text-sm font-semibold text-gray-800">
                                                     {item.name}

@@ -35,6 +35,7 @@ export async function login({
     // Stockage des infos utilisateur
     session.set("access_token", response.access_token);
     session.set("user", response.user);
+    session.set("user_role", response.user.role);
     
     // Vérification plus robuste du changement de mot de passe
     const mustChangePassword = response.must_change_password || 
@@ -194,6 +195,7 @@ export async function verifyEmailWithOtp(
     if (user && user.email === email) {
       user.email_verified = true;
       session.set("user", user);
+      session.set("user_role", user.role);
       
       return {
         success: true,

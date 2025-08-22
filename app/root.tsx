@@ -1,5 +1,7 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
+import AOS from "aos";
+import aosStyles from "aos/dist/aos.css?url";
 import {
     Links,
     Meta,
