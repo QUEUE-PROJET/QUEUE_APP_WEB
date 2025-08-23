@@ -10,3 +10,98 @@ body {
     color-scheme: dark;
   }
 }
+
+/* Animations personnalisées pour le chargement */
+@keyframes loading-bar {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.animate-loading-bar {
+  animation: loading-bar 2s infinite ease-in-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Améliorations visuelles pour les skeleton loaders */
+.skeleton {
+  @apply bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200;
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Transitions fluides globales */
+* {
+  transition-duration: 200ms;
+}
+
+/* Amélioration des scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 hover:bg-slate-400;
+  border-radius: 4px;
+}
+
+/* Focus states améliorés */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2;
+}

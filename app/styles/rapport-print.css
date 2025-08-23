@@ -1,0 +1,140 @@
+/* Styles pour l'impression des rapports */
+@media print {
+  /* Masquer les éléments non nécessaires à l'impression */
+  .no-print,
+  .export-options,
+  button,
+  .bg-gray-50 {
+    display: none !important;
+  }
+
+  /* Optimiser l'utilisation de l'espace */
+  body {
+    font-size: 12px;
+    line-height: 1.4;
+    color: #000;
+    background: white;
+  }
+
+  /* Éviter les sauts de page à l'intérieur des éléments */
+  .page-break-inside-avoid {
+    page-break-inside: avoid;
+  }
+
+  /* Forcer un saut de page avant certains éléments */
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  /* Styles pour les tableaux */
+  table {
+    width: 100% !important;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f5f5f5 !important;
+    font-weight: bold;
+  }
+
+  /* Styles pour les graphiques */
+  .chart-container {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Marges pour l'impression */
+  .print-margin {
+    margin: 0.5in;
+  }
+
+  /* En-têtes et pieds de page */
+  .print-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  .print-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+  }
+
+  /* Optimiser les couleurs pour l'impression */
+  .bg-blue-50, .bg-green-50, .bg-yellow-50, .bg-purple-50, .bg-indigo-50, .bg-pink-50 {
+    background-color: #f9f9f9 !important;
+  }
+
+  .text-blue-600, .text-green-600, .text-yellow-600, .text-purple-600, .text-indigo-600, .text-pink-600 {
+    color: #333 !important;
+  }
+
+  /* Ombres et bordures simplifiées */
+  .shadow-sm, .shadow {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+
+  .rounded-lg {
+    border-radius: 4px !important;
+  }
+
+  /* Graphiques en barres pour l'impression */
+  .chart-bar {
+    background-color: #666 !important;
+    border: 1px solid #333;
+  }
+
+  /* Pagination */
+  .rapport-section {
+    page-break-inside: avoid;
+    margin-bottom: 20px;
+  }
+
+  /* Titre de rapport */
+  .rapport-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+  }
+
+  /* Sous-titres */
+  .rapport-subtitle {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+
+  /* Métriques importantes */
+  .metric-value {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  /* Date du rapport */
+  .rapport-date {
+    text-align: right;
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+}
