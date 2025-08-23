@@ -112,12 +112,6 @@ export default function DashboardPage() {
             Vue d'ensemble de votre système de gestion de files
           </p>
         </div>
-        <div className="flex space-x-3" data-aos="fade-left" data-aos-delay="100">
-          <button className="px-6 py-3 bg-gradient-to-r from-[#00296b] to-[#003f88] text-white rounded-xl hover:from-[#003f88] hover:to-[#00509d] transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-            Exporter
-          </button>
-
-        </div>
       </div>
 
       {/* Stats Cards */}
