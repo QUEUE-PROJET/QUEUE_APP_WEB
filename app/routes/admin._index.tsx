@@ -312,11 +312,11 @@ export default function AdminDashboard() {
                                             <div className="flex items-center space-x-2">
                                                 <div
                                                     className={`w-4 h-4 rounded-full shadow-sm ${item.color === "#10B981"
-                                                            ? "bg-emerald-500"
-                                                            : item.color ===
-                                                                "#F59E0B"
-                                                                ? "bg-amber-500"
-                                                                : "bg-red-500"
+                                                        ? "bg-emerald-500"
+                                                        : item.color ===
+                                                            "#F59E0B"
+                                                            ? "bg-amber-500"
+                                                            : "bg-red-500"
                                                         }`}
                                                 ></div>
                                                 <span className="text-sm font-semibold text-gray-800">
