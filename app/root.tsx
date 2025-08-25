@@ -9,6 +9,7 @@ import {
     useLoaderData,
 } from "@remix-run/react";
 import { ThemeProvider } from "./context/theme";
+import { AnimatePresence } from "framer-motion";
 import "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -39,7 +40,9 @@ export default function App() {
             </head>
             <body>
                 <ThemeProvider>
-                    <Outlet />
+                    <AnimatePresence mode="wait">
+                        <Outlet />
+                    </AnimatePresence>
                 </ThemeProvider>
 
                 <ScrollRestoration />
