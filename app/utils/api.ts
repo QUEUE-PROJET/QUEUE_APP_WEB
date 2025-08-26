@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-// export const BASE_API_URL = "https://queue-app-42do.onrender.com";
-export const BASE_API_URL = "http://127.0.0.1:8000"; 
+export const BASE_API_URL = "https://queue-app-42do.onrender.com";
+//export const BASE_API_URL = "http://127.0.0.1:8000"; 
 // function getCookie(name: string): string | null {
 //   const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
 //   if (match) return decodeURIComponent(match[2]);

@@ -291,11 +291,13 @@ export default function RegisterPage() {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white p-8 rounded-2xl shadow-2xl text-center">
                         <div className="animate-spin mx-auto mb-4 h-8 w-8 border-4 border-[#00509d] border-t-transparent rounded-full"></div>
-                        <p className="text-lg font-semibold text-[#00296b]">Redirection vers la vérification email...</p>
+                        <p className="text-lg font-semibold text-[#00296b]">
+                            Redirection vers la vérification email...
+                        </p>
                     </div>
                 </div>
             )}
-            
+
             {/* Enhanced Navigation */}
             <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-lg border-b border-gray-200 shadow-lg transition-all duration-300">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -790,7 +792,7 @@ export default function RegisterPage() {
                                         }
                                         className="text-left"
                                         classNamePrefix="react-select"
-                                        isSearchable={true}
+                                        isSearchable={false}
                                         styles={{
                                             control: (base, state) => ({
                                                 ...base,
@@ -1787,7 +1789,11 @@ export default function RegisterPage() {
 
                             <button
                                 type="submit"
-                                disabled={!canSubmitForm() || isSubmitting || isRedirecting}
+                                disabled={
+                                    !canSubmitForm() ||
+                                    isSubmitting ||
+                                    isRedirecting
+                                }
                                 className={`group relative px-16 py-5 rounded-2xl text-xl font-black transition-all duration-300 transform shadow-2xl ${
                                     canSubmitForm()
                                         ? "bg-gradient-to-r from-blue-900 to-blue-800 text-white hover:scale-105 hover:shadow-blue-900/25"
@@ -1802,7 +1808,9 @@ export default function RegisterPage() {
                                         <div className="absolute inset-0 flex items-center justify-center">
                                             <div className="animate-spin rounded-full h-8 w-8 border-b-3 border-white mr-3"></div>
                                             <span className="text-white font-bold">
-                                                {isRedirecting ? "Redirection..." : "Création en cours..."}
+                                                {isRedirecting
+                                                    ? "Redirection..."
+                                                    : "Création en cours..."}
                                             </span>
                                         </div>
                                     </>
