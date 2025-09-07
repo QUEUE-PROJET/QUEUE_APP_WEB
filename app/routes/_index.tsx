@@ -105,11 +105,10 @@ export default function Index() {
                 <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-900/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
 
                 <div
-                    className={`relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center transition-all duration-1000 ${
-                        isVisible
-                            ? "opacity-100 translate-y-0"
-                            : "opacity-0 translate-y-10"
-                    }`}
+                    className={`relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center transition-all duration-1000 ${isVisible
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-10"
+                        }`}
                 >
                     <div className="max-w-5xl mx-auto">
                         {/* Premium Badge */}
@@ -909,41 +908,7 @@ export default function Index() {
                         </div>
                     </div>
 
-                    {/* Trust Indicators */}
-                    <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
-                        <div className="text-center mb-8">
-                            <h3 className="text-2xl font-bold text-blue-900 mb-4">
-                                Ils nous font confiance
-                            </h3>
-                            <p className="text-gray-600">
-                                Plus de 500 entreprises leaders utilisent Q-App
-                                quotidiennement
-                            </p>
-                        </div>
-                        <div className="flex items-center justify-center space-x-12 opacity-60">
-                            {/* Logo placeholders */}
-                            <div className="w-24 h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg flex items-center justify-center">
-                                <span className="text-sm font-bold text-gray-600">
-                                    LOGO
-                                </span>
-                            </div>
-                            <div className="w-24 h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg flex items-center justify-center">
-                                <span className="text-sm font-bold text-gray-600">
-                                    LOGO
-                                </span>
-                            </div>
-                            <div className="w-24 h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg flex items-center justify-center">
-                                <span className="text-sm font-bold text-gray-600">
-                                    LOGO
-                                </span>
-                            </div>
-                            <div className="w-24 h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg flex items-center justify-center">
-                                <span className="text-sm font-bold text-gray-600">
-                                    LOGO
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </section>
 
@@ -1258,28 +1223,7 @@ export default function Index() {
                             </div>
                         </div>
 
-                        {/* Newsletter Section */}
-                        <div className="mt-16 p-8 bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20">
-                            <div className="max-w-2xl mx-auto text-center">
-                                <h3 className="text-2xl font-bold text-white mb-4">
-                                    Restez informé des dernières innovations
-                                </h3>
-                                <p className="text-blue-100 mb-6">
-                                    Recevez nos insights exclusifs, études de
-                                    cas et nouveautés produit
-                                </p>
-                                <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                                    <input
-                                        type="email"
-                                        placeholder="Votre email professionnel"
-                                        className="flex-1 px-4 py-3 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                                    />
-                                    <button className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 rounded-xl font-semibold hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform hover:scale-105">
-                                        S&apos;abonner
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
 
                     {/* Bottom Bar */}
@@ -1291,19 +1235,19 @@ export default function Index() {
                                         © 2025 Q-App. Tous droits réservés.
                                     </span>
                                     <Link
-                                        to="/privacy"
+                                        to=""
                                         className="hover:text-white transition-colors"
                                     >
                                         Confidentialité
                                     </Link>
                                     <Link
-                                        to="/terms"
+                                        to=""
                                         className="hover:text-white transition-colors"
                                     >
                                         CGU
                                     </Link>
                                     <Link
-                                        to="/cookies"
+                                        to=""
                                         className="hover:text-white transition-colors"
                                     >
                                         Cookies
